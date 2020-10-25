@@ -48,7 +48,7 @@ def valid(baord, number, position):
         if board[i][position[1]] == number and position[0] != i:
             return False
 
-    # Check cube
+    # Check box
     box_x = position[1] // 3
     box_y = position[0] // 3
 
