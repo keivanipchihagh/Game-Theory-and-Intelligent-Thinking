@@ -9,13 +9,16 @@ Modify the code for your own use.
 '''
 
 
+from typing import Iterator
+
+
 class Node:
 	''' Node object contains a value, a pointers to left and a pointer to the right node '''
 
 	def __init__(self, value):
 		''' Construction - Initializes the object variables '''
 
-		self.right = self.left = None
+		self.right = self.left = self.parent = None
 		self.value = value
 
 
@@ -30,9 +33,12 @@ class BinaryTree:
 	- in_order_traverse			O(n)			Return: -			Param: -			Contains inline funtion
 	- pre_order_traverse		O(n)			Return: -			Param: -			Contains inline funtion
 	- post_order_traverse		O(n)			Return: -			Param: -			Contains inline funtion
-	- exists					O(n)			Return: Boolean		Param: Value 		Contains inline funtion
-	- get_min					O(log(n))		Return: Min value 	Param: - 			Contains inline funtion
-	- get_max					O(log(n))		Return: Max value 	Param: - 			Contains inline funtion
+	- exists					O(n)			Return: Boolean		Param: Value
+	- get_node					O(log(n))		Return: Node 	 	Param: -
+	- get_min					O(log(n))		Return: Min value 	Param: -
+	- get_max					O(log(n))		Return: Max value 	Param: -
+	- get_successor				O(n)			Return Successor 	Param: Value
+	- get_predecessor			O(n)			Return Successor 	Param: Value
 
 	'''
 
@@ -53,8 +59,9 @@ class BinaryTree:
 				if value < iterator.value:
 
 					# Left branch
-					if iterator.left is None:
+					if iterator.left is None:						
 						iterator.left = Node(value)
+						iterator.left.parent = iterator 	# Set parent
 					else:
 						insert(self, value, iterator.left)
 				else:
@@ -62,6 +69,7 @@ class BinaryTree:
 					# Right branch
 					if iterator.right is None:
 						iterator.right = Node(value)
+						iterator.right.parent = iterator 	# Set parent
 					else:
 						insert(self, value, iterator.right)
 			else:
@@ -175,32 +183,84 @@ class BinaryTree:
 			print()
 
 	def exists(self, value):
-		''' Searches for an spesific value '''
+		''' Check whether the given value exists in the tree or not '''
 
 		if self.size == 0: raise Exception('Tree is empty!')
 
-		def search(self, value, iterator):
-			''' Recursive search '''
+		iterator = self.root
+		return True if (self.get_node(value, iterator) == True) else False
 
-			if iterator is None:
-				return False
+	def get_node(self, value, iterator):
+		'''  Returns the node containing the given value '''
 
-			if value == iterator.value:
-				return True
-			elif value < iterator.value:
-				return search(self, value, iterator.left)
-			else:
-				return search(self, value, iterator.right)
+		# Exit condition
+		if iterator is None:
+			return iterator
+
+		if value == iterator.value:
+			return iterator
+		elif value < iterator.value:
+			return self.get_node(value, iterator.left)
+		else:
+			return self.get_node(value, iterator.right)
+
+	def get_min(self, value):
+		''' Get the minimum value from a given parent value '''
 
 		iterator = self.root
-		return search(self, value, iterator)
+		iterator = self.get_node(value, iterator)	# Get the corresponding node
+
+		while iterator.left is not None:
+			iterator = iterator.left
+
+		return iterator.value
+
+	def get_max(self, value):
+		''' Get the maxumum value from a given parent value '''
+
+		iterator = self.root
+		iterator = self.get_node(value, iterator)	# Get the corresponding node
+
+		while iterator.right is not None:
+			iterator = iterator.right
+
+		return iterator.value
+
+	def get_successor(self, value):
+		''' Get the successor for the given value '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)	# Get the corresponding node
+
+		if node.right is not None:
+   			return self.get_min(node.right.value)
+
+		parent = node.parent
+		while parent is not None and parent.right == node:
+			node = parent
+			parent = parent.parent	
+
+		return parent.value
+
+	def get_predecessor(self, value):
+		''' Get the predecessor for the given value '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)	# Get the corresponding node
+
+		if node.left is not None:
+			return self.get_max(node.left.value)
+
+		parent = node.parent
+		while parent is not None and parent.left == node:
+			node = parent
+			parent = parent.parent	
+
+		return parent.value
 
 
 
-
-
-
-
+    
 
 tree = BinaryTree()													# Initialize
 
@@ -216,6 +276,14 @@ tree.print(reversed = False)										# Print
 
 #tree.post_order_traverse()
 
-print(tree.exists(20))												# Search
+print('Check exists 7:', tree.exists(7))							# Search
 
-print(tree.min)
+print('Mininum value:', tree.min)									# Get minimum value of the entire tree
+
+print('Maximum value after 12:', tree.get_min(12))					# Get the minimum value from the given value
+
+print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value from the given value
+
+print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
+
+print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
