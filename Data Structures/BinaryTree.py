@@ -37,9 +37,9 @@ class BinaryTree:
 	- get_node					O(log(n))		Return: Node 	 	Param: -
 	- get_min					O(log(n))		Return: Min value 	Param: -
 	- get_max					O(log(n))		Return: Max value 	Param: -
-	- get_successor				O(n)			Return Successor 	Param: Value
-	- get_predecessor			O(n)			Return Successor 	Param: Value
-
+	- get_successor				O(n)			Return: Successor 	Param: Value
+	- get_predecessor			O(n)			Return: Successor 	Param: Value
+	- fancy_print				O(n)			Return: -			Param: -			Contains inline funtion
 	'''
 
 	def __init__(self):
@@ -257,10 +257,34 @@ class BinaryTree:
 			parent = parent.parent	
 
 		return parent.value
+  
+	def fancy_print(self) : 
+		''' Fancy prints the tree '''
 
+		def fancy_print(self, node, space) :
+			''' Recursively fancy prints the tree '''
 
+			COUNT = [10]	# Number of spaces
 
-    
+			# Base case  
+			if (node == None) : 
+				return
+ 
+			# Increase distance between levels  
+			space += COUNT[0]
+  
+			# Process right branch first  
+			fancy_print(self, node = node.right, space = space)
+  
+			# Print current node after space  
+			# count  
+			print('\n', abs(space - COUNT[0]) * ' ', node.value, sep = '')
+	  
+			# Process left branch  
+			fancy_print(self, node.left, space)    
+
+		temp = self.root
+		fancy_print(self, node = temp, space = 0)   
 
 tree = BinaryTree()													# Initialize
 
@@ -287,3 +311,5 @@ print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value fro
 print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
 
 print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
+
+tree.fancy_print()													# Fancy prints the tree
