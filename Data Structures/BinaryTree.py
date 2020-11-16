@@ -40,6 +40,7 @@ class BinaryTree:
 	- get_successor				O(n)			Return: Successor 	Param: Value
 	- get_predecessor			O(n)			Return: Successor 	Param: Value
 	- fancy_print				O(n)			Return: -			Param: -			Contains inline funtion
+	- delete 					O(n)			Return: -			Param: Value		Contains inline funtion
 	'''
 
 	def __init__(self):
@@ -204,7 +205,7 @@ class BinaryTree:
 		else:
 			return self.get_node(value, iterator.right)
 
-	def get_min(self, value):
+	def get_min(self, value, get_node = False):
 		''' Get the minimum value from a given parent value '''
 
 		iterator = self.root
@@ -213,9 +214,9 @@ class BinaryTree:
 		while iterator.left is not None:
 			iterator = iterator.left
 
-		return iterator.value
+		return iterator if (get_node == True) else iterator.value
 
-	def get_max(self, value):
+	def get_max(self, value, get_node = False):
 		''' Get the maxumum value from a given parent value '''
 
 		iterator = self.root
@@ -224,9 +225,9 @@ class BinaryTree:
 		while iterator.right is not None:
 			iterator = iterator.right
 
-		return iterator.value
+		return iterator if (get_node == True) else iterator.value
 
-	def get_successor(self, value):
+	def get_successor(self, value, get_node = False):
 		''' Get the successor for the given value '''
 
 		iterator = self.root
@@ -240,9 +241,9 @@ class BinaryTree:
 			node = parent
 			parent = parent.parent	
 
-		return parent.value
+		return parent if (get_node == True) else parent.value
 
-	def get_predecessor(self, value):
+	def get_predecessor(self, value, get_node = False):
 		''' Get the predecessor for the given value '''
 
 		iterator = self.root
@@ -256,7 +257,7 @@ class BinaryTree:
 			node = parent
 			parent = parent.parent	
 
-		return parent.value
+		return parent if (get_node == True) else parent.value
   
 	def fancy_print(self) : 
 		''' Fancy prints the tree '''
@@ -284,7 +285,54 @@ class BinaryTree:
 			fancy_print(self, node.left, space)    
 
 		temp = self.root
-		fancy_print(self, node = temp, space = 0)   
+		fancy_print(self, node = temp, space = 0)
+
+	def delete(self, value):
+		''' Deletes the given value from the tree 
+			Note 3 scenarios:
+				1) Node to be deleted is leaf: Simply remove from the tree.
+				2) Node to be deleted has only one child: Copy the child to the node and delete the child 
+				3) Node to be deleted has two children: Find inorder successor of the node. Copy contents of the inorder successor to the node and delete the inorder successor. Note that inorder predecessor can also be used.
+		'''
+
+		def delete(self, node, value):
+			''' Recursively search and remove the given value from the tree '''
+
+			# Base caase
+			if node is None:
+				return node
+
+			# If the given value is smaller than root's value, then it is located in the left brach
+			if value < node.value:
+				node.left = delete(self, node.left, value)
+
+			# Same applies if the value is on the right branch
+			elif value > node.value:
+				node.right = delete(self, node.right, value)
+
+			# This is the node we are looking for
+			else:
+
+				# Node with one or no child (Scenario 1 & 2)
+				if node.left is None:
+					temp = node.right
+					node = None
+					return temp
+
+				elif node.right is None:
+					temp = node.left
+					node = None
+					return temp
+
+				# Node with two children (Scenario 3)
+				temp = self.get_min(node.right.value, True)
+				node.value = temp.value
+				node.right = delete(self, node.right, temp.value)
+
+			return node
+
+		temp = self.root
+		delete(self, temp, value)
 
 tree = BinaryTree()													# Initialize
 
@@ -311,5 +359,7 @@ print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value fro
 print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
 
 print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
+
+tree.delete(5)
 
 tree.fancy_print()													# Fancy prints the tree
