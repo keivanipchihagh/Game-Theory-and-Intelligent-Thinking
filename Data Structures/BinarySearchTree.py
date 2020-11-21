@@ -1,16 +1,9 @@
 '''
-Implementation of Binary Tree
+Implementation of Binary Search Tree
 Created by: 		Keivan Ipchi Hagh
 Creation data:		Monday, November 8, 2020
 GitHub:				https://github.com/keivanipchihagh
-
-Purpose of this data structure is to have the minimum possible time complexity for each operation.
-Modify the code for your own use.
 '''
-
-
-from typing import Iterator
-
 
 class Node:
 	''' Node object contains a value, a pointers to left and a pointer to the right node '''
@@ -21,53 +14,64 @@ class Node:
 		self.right = self.left = self.parent = None
 		self.value = value
 
-
-class BinaryTree:
+class BinarySearchTree:
 	''' 
-	~ Binary Tree (Python 3 edition) ~
+									~ Binary Search Tree (Python 3 edition) ~
+
+	Binary Search Tree (BST), is a specialized form of the Binary Tree where each node has a comparable value. BST has 3 properties which make in sorted:
+		1. All keys in left subtree of a key must be smaller	
+		2. All keys in right subtree must be greater
+		3. By definition has distinct keys and duplicates in binary search tree are not allowed
 
 	functions:
-	- insert					O(long(n))		Return: -			Param: Value 		Contains inline funtion
-	- print						O(n)			Return: -			Param: -			Contains inline funtion
-	- insert_range				O(n ^ 2)		Return: -			Param: List
-	- in_order_traverse			O(n)			Return: -			Param: -			Contains inline funtion
-	- pre_order_traverse		O(n)			Return: -			Param: -			Contains inline funtion
-	- post_order_traverse		O(n)			Return: -			Param: -			Contains inline funtion
-	- exists					O(n)			Return: Boolean		Param: Value
-	- get_node					O(log(n))		Return: Node 	 	Param: -
-	- get_min					O(log(n))		Return: Min value 	Param: -
-	- get_max					O(log(n))		Return: Max value 	Param: -
-	- get_successor				O(n)			Return: Successor 	Param: Value
-	- get_predecessor			O(n)			Return: Successor 	Param: Value
-	- fancy_print				O(n)			Return: -			Param: -			Contains inline funtion
-	- delete 					O(n)			Return: -			Param: Value		Contains inline funtion
+	- insert*					O(long(n))		Return: -			Param: value
+	- print						O(n)			Return: -			Param: new_line = True, reversed = False
+	- insert_range				O(n.log(n))		Return: -			Param: list
+	- in_order_traverse*		O(n)			Return: -			Param: new_line = True
+	- pre_order_traverse*		O(n)			Return: -			Param: new_line = True
+	- post_order_traverse*		O(n)			Return: -			Param: new_line = True
+	- exists					O(n)			Return: Boolean		Param: value
+	- get_node					O(log(n))		Return: Node 	 	Param: value, iterator
+	- get_min					O(log(n))		Return: Min value 	Param: value, get_node = False
+	- get_max					O(log(n))		Return: Max value 	Param: value, get_node = False
+	- get_successor				O(n)			Return: Successor 	Param: value, get_node = False
+	- get_predecessor			O(n)			Return: Successor 	Param: value, get_node = False
+	- fancy_print				O(n)			Return: -			Param: -	
+	- delete 					O(n)			Return: -			Param: value
+	- get_depth					O(n)			Return: Depth 		param: value
+	- rotate_left				O(n)			Return: -			param: value
+	- rotate_right				O(n)			Return: -			param: value
+
+	* Contains inline recursive funtion
 	'''
 
 	def __init__(self):
 		''' Construction - Initializes the object variables to default values '''
 
+		# Default values
 		self.root = None
 		self.size = 0
 		self.min = self.max = None
 
+
 	def insert(self, value):
-		''' Inserts a value to the tree - '''
+		''' Inserts a value to the tree '''
 
 		def insert(self, value, iterator):
-			''' Recursive function to insert new node '''
+			''' Recursive function to insert a new node to the tree '''
 
 			if iterator != None:
 				if value < iterator.value:
 
-					# Left branch
+					# Left branch (Smaller value)
 					if iterator.left is None:						
 						iterator.left = Node(value)
 						iterator.left.parent = iterator 	# Set parent
 					else:
 						insert(self, value, iterator.left)
-				else:
+				elif value > iterator.value:
 
-					# Right branch
+					# Right branch (Greater value)
 					if iterator.right is None:
 						iterator.right = Node(value)
 						iterator.right.parent = iterator 	# Set parent
@@ -88,13 +92,15 @@ class BinaryTree:
 		if self.max is None or value > self.max:
     			self.max = value
 
+
 	def insert_range(self, ls):
 		''' Inserts an iterable to the tree '''
 
-		ls = list(ls)  # Convert to list
+		ls = list(ls)  # Convert to a list
 
 		for item in ls:
 			self.insert(item)
+
 
 	def print(self, new_line = True, reversed = False):
 		''' Prints the sorted values in the tree - O(n) '''
@@ -110,15 +116,13 @@ class BinaryTree:
 			print(iterator.value, end = ' ')
 			traverse(self, iterator.left, reversed) if (reversed == True) else traverse(self, iterator.right, reversed)
 
-		# Copy of the root
 		iterator = self.root
-
-		# Traverse
 		traverse(self, iterator, reversed)
 
 		# Print new line
 		if new_line == True:
 			print()
+
 
 	def in_order_traverse(self, new_line = True):
 		''' Traverse the list in order '''
@@ -141,6 +145,7 @@ class BinaryTree:
 		if new_line == True:
 			print()
 
+
 	def pre_order_traverse(self, new_line = True):
 		''' Traverse the list pre order '''
 
@@ -161,6 +166,7 @@ class BinaryTree:
 		# Print new line
 		if new_line == True:
 			print()
+
 
 	def post_order_traverse(self, new_line = True):
 		''' Traverse the list post order '''
@@ -183,6 +189,7 @@ class BinaryTree:
 		if new_line == True:
 			print()
 
+
 	def exists(self, value):
 		''' Check whether the given value exists in the tree or not '''
 
@@ -190,6 +197,7 @@ class BinaryTree:
 
 		iterator = self.root
 		return True if (self.get_node(value, iterator) == True) else False
+
 
 	def get_node(self, value, iterator):
 		'''  Returns the node containing the given value '''
@@ -205,6 +213,7 @@ class BinaryTree:
 		else:
 			return self.get_node(value, iterator.right)
 
+
 	def get_min(self, value, get_node = False):
 		''' Get the minimum value from a given parent value '''
 
@@ -214,7 +223,9 @@ class BinaryTree:
 		while iterator.left is not None:
 			iterator = iterator.left
 
+		# Return node or its value
 		return iterator if (get_node == True) else iterator.value
+
 
 	def get_max(self, value, get_node = False):
 		''' Get the maxumum value from a given parent value '''
@@ -226,6 +237,7 @@ class BinaryTree:
 			iterator = iterator.right
 
 		return iterator if (get_node == True) else iterator.value
+
 
 	def get_successor(self, value, get_node = False):
 		''' Get the successor for the given value '''
@@ -241,7 +253,9 @@ class BinaryTree:
 			node = parent
 			parent = parent.parent	
 
+		# Return node or its value
 		return parent if (get_node == True) else parent.value
+
 
 	def get_predecessor(self, value, get_node = False):
 		''' Get the predecessor for the given value '''
@@ -257,7 +271,27 @@ class BinaryTree:
 			node = parent
 			parent = parent.parent	
 
+		# Return node or its value
 		return parent if (get_node == True) else parent.value
+
+
+	def get_depth(self):
+		''' Returns the depth of the tree '''
+
+		def get_depth(self, node):
+			''' Recursivly get the depth of the tree '''
+
+			if node is None:
+				return -1
+
+			max_left = get_depth(self, node.left)
+			max_right = get_depth(self, node.right)
+
+			return max_left + 1 if (max_left > max_right) else max_right + 1
+
+		node = self.root
+		return get_depth(self, node)
+
   
 	def fancy_print(self) : 
 		''' Fancy prints the tree '''
@@ -267,8 +301,8 @@ class BinaryTree:
 
 			COUNT = [10]	# Number of spaces
 
-			# Base case  
-			if (node == None) : 
+			# Base case
+			if (node == None) :
 				return
  
 			# Increase distance between levels  
@@ -286,6 +320,7 @@ class BinaryTree:
 
 		temp = self.root
 		fancy_print(self, node = temp, space = 0)
+
 
 	def delete(self, value):
 		''' Deletes the given value from the tree 
@@ -334,11 +369,71 @@ class BinaryTree:
 		temp = self.root
 		delete(self, temp, value)
 
-tree = BinaryTree()													# Initialize
+
+	def rotate_left(self, value):
+		''' Rotates the given value to the left '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)		# Get the corresponding node for the given value
+
+		# In case value does not exist
+		if node is None or node.right is None:
+			return
+
+		temp = node.right
+		node.right = temp.left
+
+		if temp.left is not None:
+			temp.left.parent = node
+
+		temp.parent = node.parent
+
+		if node.parent is None:
+			self.root = temp
+		elif node is node.parent.left:
+			node.parent.left = temp
+		else:
+			node.parent.right = temp
+
+		temp.left = node
+		node.parent = temp			
+
+
+	def rotate_right(self, value):
+		''' Rotates the given value to the right '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)		# Get the corresponding node for the given value
+
+		# In case value does not exist
+		if node is None or node.left is None:
+			return
+
+		temp = node.left
+		node.left = temp.right
+
+		if temp.right is not None:
+			temp.right.parent = node
+
+		temp.parent = node.parent
+
+		if node.parent is None:
+			self.root = temp
+		elif node is node.parent.right:
+			node.parent.right = temp
+		else:
+			node.parent.left = temp
+
+		temp.right = node
+		node.parent = temp	
+
+
+
+tree = BinarySearchTree()											# Initialize
 
 tree.insert(5)														# Push a value
 
-tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11])		# Push an iterable
+tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11, 3])	# Push an iterable
 
 tree.print(reversed = False)										# Print
 
@@ -349,6 +444,8 @@ tree.print(reversed = False)										# Print
 #tree.post_order_traverse()
 
 print('Check exists 7:', tree.exists(7))							# Search
+
+print('Depth:', tree.get_depth())									# Height (Depth)
 
 print('Mininum value:', tree.min)									# Get minimum value of the entire tree
 
@@ -361,5 +458,7 @@ print('Successor of 2:', tree.get_successor(2))						# Get the successor for the
 print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
 
 tree.delete(5)
+
+tree.rotate_left(7)
 
 tree.fancy_print()													# Fancy prints the tree
