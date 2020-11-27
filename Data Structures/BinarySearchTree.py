@@ -159,7 +159,7 @@ class BinarySearchTree:
 
 		iterator = self.root
 		# in_order_traverse_none_recursive(self, iterator)
-		in_order_traverse_recursive(self, iterator)		
+		in_order_traverse_recursive(self, iterator)
 		
 		# Print new line
 		if new_line == True:
@@ -494,6 +494,19 @@ class BinarySearchTree:
 		temp.right = node
 		node.parent = temp	
 
+	def isBST(self):
+		prev = None
+		node = self.root
+		return isBST(self, node, prev)
+
+	def isBST(self, node, prev):
+
+		if node is None:
+			return True
+
+		# Traverse the left branch
+		if self.isBest(self, node.left, prev) == True:
+			return False
 
 
 tree = BinarySearchTree()											# Initialize
@@ -504,11 +517,11 @@ tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11, 3])	# Push an itera
 
 #tree.print(reversed = False)										# Print
 
-#tree.in_order_traverse()
+# tree.in_order_traverse()
 
 #tree.pre_order_traverse()
 
-tree.post_order_traverse()
+#tree.post_order_traverse()
 
 # print('Check exists 7:', tree.exists(7))							# Search
 
