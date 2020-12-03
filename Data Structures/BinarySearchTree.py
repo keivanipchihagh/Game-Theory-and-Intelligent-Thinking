@@ -2,7 +2,7 @@
 Implementation of Binary Search Tree
 Created by: 		Keivan Ipchi Hagh
 Creation data:		Monday, November 8, 2020
-GitHub:				https://github.com/keivanipchihagh
+GitHub:				https://github.com/keivanipchihagh/Game-Theory-and-Intelligent-Thinking/blob/main/Data%20Structures/BinarySearchTree.py
 '''
 
 class Node:
