@@ -494,20 +494,30 @@ class BinarySearchTree:
 		temp.right = node
 		node.parent = temp	
 
-	def isBST(self):
-		prev = None
-		node = self.root
-		return isBST(self, node, prev)
+	def is_BST(self, new_line = True):
+		''' Traverse the list in order '''
 
-	def isBST(self, node, prev):
+		def is_BST(self, iterator, previous):
+			''' Recursive in order traverse '''
 
-		if node is None:
-			return True
+			# Exit condition
+			if iterator is None:
+				return True
 
-		# Traverse the left branch
-		if self.isBest(self, node.left, prev) == True:
+			if is_BST(self, iterator.left, previous) == True:
+				
+				# Check acsending order & duplicate values
+				if previous is not None and iterator.value <= previous.value:
+					return False			
+
+				previous = iterator
+				return is_BST(self, iterator.right, previous)		
+
 			return False
 
+		iterator = self.root
+		previous = None
+		return is_BST(self, iterator, previous)
 
 tree = BinarySearchTree()											# Initialize
 
@@ -515,9 +525,11 @@ tree.insert(5)														# Push a value
 
 tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11, 3])	# Push an iterable
 
+print(tree.is_BST())
+
 #tree.print(reversed = False)										# Print
 
-# tree.in_order_traverse()
+tree.in_order_traverse()
 
 #tree.pre_order_traverse()
 
