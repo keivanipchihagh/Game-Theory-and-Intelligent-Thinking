@@ -42,6 +42,7 @@ class BinarySearchTree:
 	- rotate_left				O(n)			Return: -			param: value
 	- rotate_right				O(n)			Return: -			param: value
 	- is_BST					O(n)			Return: Boolean		param: -
+	- is_subtree				O(n + m)		Return: Boolean		param: tree
 
 	* Contains inline recursive funtion
 	'''
@@ -128,18 +129,19 @@ class BinarySearchTree:
 	def in_order_traverse(self, new_line = True):
 		''' Traverse the list in order '''
 
-		def in_order_traverse_recursive(self, iterator):
+		def in_order_traverse_recursive(self, iterator, array):
 			''' Recursive in order traverse '''
 
 			# Exit condition
 			if iterator is None:
 				return
 
-			in_order_traverse_recursive(self, iterator.left)
+			in_order_traverse_recursive(self, iterator.left, array)
 			print(iterator.value, end = ' ')
-			in_order_traverse_recursive(self, iterator.right)
+			array.append(iterator.value)
+			in_order_traverse_recursive(self, iterator.right, array)
 
-		def in_order_traverse_none_recursive(self, iterator):
+		def in_order_traverse_none_recursive(self, iterator, array):
 			''' In Order traverse using stack '''
 
 			stack = []	
@@ -154,23 +156,28 @@ class BinarySearchTree:
 				elif stack:
 					iterator = stack.pop()	# Get the last node
 					print(iterator.value, end = ' ')
+					array.append(iterator.value)
 					iterator = iterator.right
 				else:
 					break
 
 		iterator = self.root
-		# in_order_traverse_none_recursive(self, iterator)
-		in_order_traverse_recursive(self, iterator)
+		array = []
+		# in_order_traverse_none_recursive(self, iterator, array)
+		in_order_traverse_recursive(self, iterator, array)
 		
 		# Print new line
 		if new_line == True:
 			print()
 
+		# Returns the array if needed
+		return array
+
 
 	def pre_order_traverse(self, new_line = True):
 		''' Traverse the list pre order '''
 
-		def pre_order_traverse_recursive(self, iterator):
+		def pre_order_traverse_recursive(self, iterator, array):
 			''' Recursive pre order traverse '''
 
 			# Exit condition
@@ -178,10 +185,11 @@ class BinarySearchTree:
     				return
 
 			print(iterator.value, end = ' ')
-			pre_order_traverse_recursive(self, iterator.left)			
-			pre_order_traverse_recursive(self, iterator.right)
+			array.append(iterator.value)
+			pre_order_traverse_recursive(self, iterator.left, array)
+			pre_order_traverse_recursive(self, iterator.right, array)
 
-		def pre_order_traverse_none_recursive(self, iterator):
+		def pre_order_traverse_none_recursive(self, iterator, array):
 			''' Pre Order traverse using stack '''
 
 			stack = []	
@@ -190,7 +198,8 @@ class BinarySearchTree:
 
 				if iterator is not None:
 					print(iterator.value, end = ' ')
-					stack.append(iterator)					
+					array.append(iterator.value)
+					stack.append(iterator)		
 					iterator = iterator.left
 
 				# Backtrack the stack
@@ -201,30 +210,35 @@ class BinarySearchTree:
 					break
 
 		iterator = self.root
-		pre_order_traverse_recursive(self, iterator)
-		#pre_order_traverse_none_recursive(self, iterator)
+		array = []
+		pre_order_traverse_recursive(self, iterator, array)
+		#pre_order_traverse_none_recursive(self, iterator, array)
 
 		
 		# Print new line
 		if new_line == True:
 			print()
 
+		# Returns the array if needed
+		return array
+
 
 	def post_order_traverse(self, new_line = True):
 		''' Traverse the list post order '''
 
-		def post_order_traverse_recursive(self, iterator):
+		def post_order_traverse_recursive(self, iterator, array):
 			''' Recursive post order traverse '''
 
 			# Exit condition
 			if iterator is None:
     				return
 			
-			post_order_traverse_recursive(self, iterator.left)
-			post_order_traverse_recursive(self, iterator.right)
+			post_order_traverse_recursive(self, iterator.left, array)
+			post_order_traverse_recursive(self, iterator.right, array)
 			print(iterator.value, end = ' ')
+			array.append(iterator.value)
 
-		def post_order_traverse_none_recursive(self, iterator):
+		def post_order_traverse_none_recursive(self, iterator, array):
 			''' Pre Order traverse using stack '''
 
 			stack = []
@@ -248,14 +262,19 @@ class BinarySearchTree:
 
 					last_out = stack.pop()
 					print(last_out.value, end = ' ')
+					array.append(iterator.value)
 
 		iterator = self.root
-		post_order_traverse_recursive(self, iterator)
-		#post_order_traverse_none_recursive(self, iterator)
+		array = []
+		post_order_traverse_recursive(self, iterator, array)
+		#post_order_traverse_none_recursive(self, iterator, array)
 		
 		# Print new line
 		if new_line == True:
 			print()
+
+		# Returns the array if needed
+		return array
 
 
 	def exists(self, value):
@@ -388,6 +407,7 @@ class BinarySearchTree:
 
 		temp = self.root
 		fancy_print(self, node = temp, space = 0)
+		print()
 
 
 	def delete(self, value):
@@ -522,41 +542,77 @@ class BinarySearchTree:
 		previous = None
 		return is_BST(self, iterator, previous)
 
+
+	def is_subtree(self, tree):
+		''' Checks if the given BST tree is the subtree of the current BST tree '''
+
+		def is_subarray(self, arr_1, arr_2):
+
+			i = j = 0
+
+			while i < len(arr_1) and j < len(arr_2):
+
+				if arr_1[i] == arr_2[j]:
+					i += 1
+					j += 1
+
+					# Second tree traverse completed
+					if j == len(arr_2):
+						return True
+
+				else:
+					i = i - j + 1
+					j = 0
+
+			return False
+
+		# Get 'In Order' & 'Pre Order' of tree_1
+		tree_1_in_order = self.in_order_traverse()
+		tree_1_pre_order = self.pre_order_traverse()
+
+		# Get 'In Order' & 'Pre Order' of tree_2
+		tree_2_in_order = tree.in_order_traverse()
+		tree_2_pre_order = tree.pre_order_traverse()
+
+		# Compare arrays for each tree respectively
+		return is_subarray(self, tree_1_in_order, tree_2_in_order) and is_subarray(self, tree_1_pre_order, tree_2_pre_order)
+
+
 tree = BinarySearchTree()											# Initialize
 
 tree.insert(5)														# Push a value
 
 tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11, 3])	# Push an iterable
 
-print(tree.is_BST())
+# print(tree.is_BST())
 
-tree.print(reversed = False)										# Print
+# tree.print(reversed = False)										# Print
 
-print('In Order Traverse:')
-tree.in_order_traverse()
+# print('In Order Traverse:')
+# tree.in_order_traverse()
 
-print('Pre Order Traverse:')
-tree.pre_order_traverse()
+# print('Pre Order Traverse:')
+# tree.pre_order_traverse()
 
-print('Post Order Traverse:')
-tree.post_order_traverse()
+# print('Post Order Traverse:')
+# tree.post_order_traverse()
 
-print('Check exists 7:', tree.exists(7))							# Search
+# print('Check exists 7:', tree.exists(7))							# Search
 
-print('Depth:', tree.get_depth())									# Height (Depth)
+# print('Depth:', tree.get_depth())									# Height (Depth)
 
-print('Mininum value:', tree.min)									# Get minimum value of the entire tree
+# print('Mininum value:', tree.min)									# Get minimum value of the entire tree
 
-print('Maximum value after 12:', tree.get_min(12))					# Get the minimum value from the given value
+# print('Maximum value after 12:', tree.get_min(12))					# Get the minimum value from the given value
 
-print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value from the given value
+# print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value from the given value
 
-print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
+# print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
 
-print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
+# print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
 
-tree.delete(5)
+# tree.delete(5)
 
-tree.rotate_left(7)
+# tree.rotate_left(7)
 
-tree.fancy_print()													# Fancy prints the tree
+# tree.fancy_print()													# Fancy prints the tree
