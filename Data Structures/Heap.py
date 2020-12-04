@@ -5,26 +5,18 @@ Creation data:		Monday, November 8, 2020
 GitHub:				https://github.com/keivanipchihagh/Game-Theory-and-Intelligent-Thinking/blob/main/Data%20Structures/Heap.py
 '''
 
-class Heap:
+class MaxHeap:
 
 	def __init__(self):
-		''' Construction - Initializes the object variables to default values '''
 
 		# Default values
 		self.root = None
 		self.size = 0
 		self.array = []	
 
-	def print(self):
-		print(' '.join([str(item) for item in self.array]))
-
-class MaxHeap(Heap):
-
-	def __init__(self):
-		super(MaxHeap, self).__init__()
-
 
 	def heapify(self, index):
+		''' Sorts the Heap '''
 
 		largest = index
 		left = 2 * index + 1
@@ -52,12 +44,16 @@ class MaxHeap(Heap):
 
 		self.heapify(self.size - 1)
 
+	def insert_range(self, ls):
+		''' Inserts a range of items '''
+
+		for item in ls:
+			self.insert(item)
+
+	def print(self):
+		print(' '.join([str(item) for item in self.array]))
+
 maxH = MaxHeap()
-maxH.insert(10)
-maxH.insert(5)
-maxH.insert(3)
-maxH.insert(2)
-maxH.insert(4)
-maxH.insert(15)
+maxH.insert_range([1, 3, 5, 4, 6, 13, 10, 9, 8, 15, 17])
 
 maxH.print()
