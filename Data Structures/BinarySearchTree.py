@@ -41,8 +41,8 @@ class BinarySearchTree:
 	- get_depth					O(n)			Return: Depth 		param: value
 	- rotate_left				O(n)			Return: -			param: value
 	- rotate_right				O(n)			Return: -			param: value
-	- is_BST					O(n)			Return: Boolean		param: -
-	- is_subtree				O(n + m)		Return: Boolean		param: tree
+	- is_BST*					O(n)			Return: Boolean		param: -
+	- is_subtree*				O(n + m)		Return: Boolean		param: tree
 
 	* Contains inline recursive funtion
 	'''
@@ -126,7 +126,7 @@ class BinarySearchTree:
 			print()
 
 
-	def in_order_traverse(self, new_line = True):
+	def in_order_traverse(self, new_line = True, no_print = False):
 		''' Traverse the list in order '''
 
 		def in_order_traverse_recursive(self, iterator, array):
@@ -137,7 +137,9 @@ class BinarySearchTree:
 				return
 
 			in_order_traverse_recursive(self, iterator.left, array)
-			print(iterator.value, end = ' ')
+
+			if no_print == False:
+				print(iterator.value, end = ' ')
 			array.append(iterator.value)
 			in_order_traverse_recursive(self, iterator.right, array)
 
@@ -174,7 +176,7 @@ class BinarySearchTree:
 		return array
 
 
-	def pre_order_traverse(self, new_line = True):
+	def pre_order_traverse(self, new_line = True, no_print = False):
 		''' Traverse the list pre order '''
 
 		def pre_order_traverse_recursive(self, iterator, array):
@@ -184,7 +186,8 @@ class BinarySearchTree:
 			if iterator is None:
     				return
 
-			print(iterator.value, end = ' ')
+			if no_print == False:
+				print(iterator.value, end = ' ')
 			array.append(iterator.value)
 			pre_order_traverse_recursive(self, iterator.left, array)
 			pre_order_traverse_recursive(self, iterator.right, array)
@@ -223,7 +226,7 @@ class BinarySearchTree:
 		return array
 
 
-	def post_order_traverse(self, new_line = True):
+	def post_order_traverse(self, new_line = True, no_print = False):
 		''' Traverse the list post order '''
 
 		def post_order_traverse_recursive(self, iterator, array):
@@ -235,7 +238,8 @@ class BinarySearchTree:
 			
 			post_order_traverse_recursive(self, iterator.left, array)
 			post_order_traverse_recursive(self, iterator.right, array)
-			print(iterator.value, end = ' ')
+			if no_print == False:
+				print(iterator.value, end = ' ')
 			array.append(iterator.value)
 
 		def post_order_traverse_none_recursive(self, iterator, array):
@@ -584,35 +588,35 @@ tree.insert(5)														# Push a value
 
 tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11, 3])	# Push an iterable
 
-# print(tree.is_BST())
+print(tree.is_BST())
 
-# tree.print(reversed = False)										# Print
+tree.print(reversed = False)										# Print
 
-# print('In Order Traverse:')
-# tree.in_order_traverse()
+print('In Order Traverse:')
+tree.in_order_traverse()
 
-# print('Pre Order Traverse:')
-# tree.pre_order_traverse()
+print('Pre Order Traverse:')
+print(tree.pre_order_traverse(no_print = True))
 
-# print('Post Order Traverse:')
-# tree.post_order_traverse()
+print('Post Order Traverse:')
+tree.post_order_traverse()
 
-# print('Check exists 7:', tree.exists(7))							# Search
+print('Check exists 7:', tree.exists(7))							# Search
 
-# print('Depth:', tree.get_depth())									# Height (Depth)
+print('Depth:', tree.get_depth())									# Height (Depth)
 
-# print('Mininum value:', tree.min)									# Get minimum value of the entire tree
+print('Mininum value:', tree.min)									# Get minimum value of the entire tree
 
-# print('Maximum value after 12:', tree.get_min(12))					# Get the minimum value from the given value
+print('Maximum value after 12:', tree.get_min(12))					# Get the minimum value from the given value
 
-# print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value from the given value
+print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value from the given value
 
-# print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
+print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
 
-# print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
+print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
 
-# tree.delete(5)
+tree.delete(5)
 
-# tree.rotate_left(7)
+tree.rotate_left(7)
 
-# tree.fancy_print()													# Fancy prints the tree
+tree.fancy_print()													# Fancy prints the tree
