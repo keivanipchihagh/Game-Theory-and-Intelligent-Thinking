@@ -394,23 +394,6 @@ class RedBlackTree(BinarySearchTree):
 
 			insert_fix_case_1(self, node)
 
-		# def insert_fix(self, node):
-		# 	''' Fixex the tree using the 3 cases for insertion '''
-
-		# 	parent = self.get_parent(node)
-		# 	uncle = self.get_uncle(node)
-
-		# 	# Case 1
-		# 	if parent is None:
-		# 		insert_fix_case_1(self, node)
-
-		# 	# Case 2
-		# 	elif uncle is not None and uncle.color == 'RED':
-		# 		insert_fix_case_2(self, node)
-
-		# 	# Case 3 & 4
-		# 	elif uncle is not None and uncle.color == 'BLACK' and parent.color == 'RED':
-  #   				insert_fix_case_3(self, node)
 
 		def insert_fix_case_1(self, node):
 			''' In this case, the node is the root. Solution: color it BLACK '''
