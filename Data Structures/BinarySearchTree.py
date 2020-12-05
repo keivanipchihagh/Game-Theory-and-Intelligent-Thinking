@@ -582,41 +582,41 @@ class BinarySearchTree:
 		return is_subarray(self, tree_1_in_order, tree_2_in_order) and is_subarray(self, tree_1_pre_order, tree_2_pre_order)
 
 
-tree = BinarySearchTree()											# Initialize
+# tree = BinarySearchTree()											# Initialize
 
-tree.insert(5)														# Push a value
+# tree.insert(5)														# Push a value
 
-tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11, 3])	# Push an iterable
+# tree.insert_range([3, 7, 6, -1, 2, -2, 1, 12, 10, 14, 8, 11, 3])	# Push an iterable
 
-print(tree.is_BST())
+# print(tree.is_BST())
 
-tree.print(reversed = False)										# Print
+# tree.print(reversed = False)										# Print
 
-print('In Order Traverse:')
-tree.in_order_traverse()
+# print('In Order Traverse:')
+# tree.in_order_traverse()
 
-print('Pre Order Traverse:')
-print(tree.pre_order_traverse(no_print = True))
+# print('Pre Order Traverse:')
+# print(tree.pre_order_traverse(no_print = True))
 
-print('Post Order Traverse:')
-tree.post_order_traverse()
+# print('Post Order Traverse:')
+# tree.post_order_traverse()
 
-print('Check exists 7:', tree.exists(7))							# Search
+# print('Check exists 7:', tree.exists(7))							# Search
 
-print('Depth:', tree.get_depth())									# Height (Depth)
+# print('Depth:', tree.get_depth())									# Height (Depth)
 
-print('Mininum value:', tree.min)									# Get minimum value of the entire tree
+# print('Mininum value:', tree.min)									# Get minimum value of the entire tree
 
-print('Maximum value after 12:', tree.get_min(12))					# Get the minimum value from the given value
+# print('Maximum value after 12:', tree.get_min(12))					# Get the minimum value from the given value
 
-print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value from the given value
+# print('Minimum value after 7:', tree.get_max(7))					# Get the maximum value from the given value
 
-print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
+# print('Successor of 2:', tree.get_successor(2))						# Get the successor for the given value
 
-print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
+# print('Predecessor of 8:', tree.get_predecessor(8))					# Get the predecessor for the given value
 
-tree.delete(5)
+# tree.delete(5)
 
-tree.rotate_left(7)
+# tree.rotate_left(7)
 
-tree.fancy_print()													# Fancy prints the tree
+# tree.fancy_print()													# Fancy prints the tree
