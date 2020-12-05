@@ -200,7 +200,7 @@ class LinkedList:
 			ls.append(iterator.value)			
 			iterator = iterator.prev if (reversed == True) else iterator.next	# Step
 
-		return ls
+		return ls	
 
 # Show case
 ll = LinkedList()								# Initialize
