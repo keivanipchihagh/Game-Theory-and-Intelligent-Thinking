@@ -61,11 +61,11 @@ class RedBlackTree(BST):
 	- get_successor				O(n)			Return: Successor 	Param: value, get_node = False
 	- get_predecessor			O(n)			Return: Successor 	Param: value, get_node = False
 	- delete 					O(log(n))		Return: -			Raram: value
+	- rotate_left				O(1)			Return: -	 		Param: Node
+	- rotate_right				O(1)			Return: -	 		Param: Node
 
 	functions (Inherited from BST):
-
-	- rotate_left				O(1)			Return: -	 		Param: Node
-	- rotate_right				O(1)			Return: -	 		Param: Node			
+	
 	- exists					O(n)			Return: Boolean		Param: value
 	- get_node					O(log(n))		Return: Node 	 	Param: value, iterator	
 	- is_subtree*				O(n + m)		Return: Boolean		param: tree
@@ -532,6 +532,7 @@ class RedBlackTree(BST):
 
 
 	def insert(self, value):
+		''' Insert a value into the tree '''
 
 		def insert_recurse(self, iterator, node):
 			''' Recursively inserts the new node '''
@@ -614,6 +615,7 @@ class RedBlackTree(BST):
 			
 			insert_fix_case_4(self, node)	# We might mess up the upper nodes, so recheck recursively
 
+
 		def insert_fix_case_4(self, node):
 			''' In this case, the node's uncle us BLACK and the error shapes a line '''
 
@@ -640,7 +642,9 @@ class RedBlackTree(BST):
 			iterator = NIL()
 
 		# Insert the node to the current tree
+		self.height += 1
 		insert_recurse(self, iterator, node)
+
 
 	def insert_range(self, ls):
 		''' Inserts a list of items into the tree '''
@@ -667,6 +671,7 @@ class RedBlackTree(BST):
 			# Rule 4 is violated when color is BLACK
 			if old_node.color == 'BLACK':
 				delete_fixup(self, new_node)
+
 
 		def delete_case_2(self, node, has_left_child):
 			''' Case 2 - 1 non-NIL child which is always black - Replace the target node with its only non-NIL child '''
@@ -698,6 +703,7 @@ class RedBlackTree(BST):
 			if old_node.color == 'BLACK':	# There is NO way the deleted node is RED - So rule 4 is violated (Might as well rule 3)
 				delete_fixup(self, new_node)
 
+
 		def delete_case_3(self, node):
 			''' Case 3 - 2 non_NIL children - Copy successors value to the target node, then delete the soccessor which leads to either Case 1 or 2 '''
 
@@ -708,6 +714,7 @@ class RedBlackTree(BST):
 
 			# Delete the successor
 			delete(self, successor)
+
 
 		def delete_fixup(self, node):
 			''' Fixes any violations in the tree '''
@@ -828,12 +835,20 @@ class RedBlackTree(BST):
 			return;
 
 		# Delete node
+		self.height -= 1
 		delete(self, node)
 
-# Initialization
-RB = RedBlackTree()
 
-# Insert
-RB.insert_range([13, 8, 17, 1, 11, 15, 25, 6, 22, 27])
-RB.delete(11)
-RB.fancy_print(print_NIL = False)
+
+
+
+
+
+
+# RB = RedBlackTree()
+
+# RB.insert_range([13, 8, 17, 1, 11, 15, 25, 6, 22, 27])
+
+# RB.delete(11)
+
+# RB.fancy_print(print_NIL = False)
