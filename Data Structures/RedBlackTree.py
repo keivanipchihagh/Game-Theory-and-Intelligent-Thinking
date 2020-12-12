@@ -5,10 +5,16 @@ Creation data:		Monday, November 8, 2020
 GitHub:				https://github.com/keivanipchihagh/Game-Theory-and-Intelligent-Thinking/blob/main/Data%20Structures/RedBlackTree.py
 '''
 
-# Import BinarySearchTree.py
-# import importlib
-# importlib.import_module('BinarySearchTree')
-from BinarySearchTree import BinarySearchTree
+from BinarySearchTree import BinarySearchTree as BST
+
+class NIL:
+	''' NILL '''
+    
+	def __init__(self):
+
+		self.color = 'BLACK'
+		self.parent = None
+		self.value = None
 
 class Node:
 	''' Node object contains a value, a pointers to left and a pointer to the right node '''
@@ -16,11 +22,13 @@ class Node:
 	def __init__(self, value):
 		''' Construction - Initializes the object variables '''
 
-		self.right = self.left = self.parent = None
+		self.right = self.left = NIL()
+		self.parent = None
 		self.color = 'RED'
 		self.value = value
 
-class RedBlackTree(BinarySearchTree):
+
+class RedBlackTree(BST):
 	''' 
 									~ Red Black Tree (Python 3 edition) ~
 
@@ -39,21 +47,26 @@ class RedBlackTree(BinarySearchTree):
 	- get_grand_parent 			O(1)			Return: Node 		Param: Node
 	- get_sibling 				O(1)			Return: Node 		Param: Node
 	- get_uncle 				O(1)			Return: Node 		Param: Node
-	- rotate_left				O(1)			Return: -	 		Param: Node
-	- rotate_right				O(1)			Return: -	 		Param: Node
-	- insert 					O(log(n)		Return: -	 		Param: Node
+	- insert 					O(log(n)		Return: -	 		Param: value
 	- print						O(n)			Return: -			Param: new_line = True, reversed = False
 	- insert_range				O(n.log(n))		Return: -			Param: list
 	- in_order_traverse*		O(n)			Return: -			Param: new_line = True
 	- pre_order_traverse*		O(n)			Return: -			Param: new_line = True
 	- post_order_traverse*		O(n)			Return: -			Param: new_line = True
+	- fancy_print				O(n)			Return: -			Param: -		
+	- delete					O(log(n))		Return: -			Param: value
+	- recolor 					O(n)			Return: -			Param: value
+
+	functions (Inherited from BST):
+
+	- rotate_left				O(1)			Return: -	 		Param: Node
+	- rotate_right				O(1)			Return: -	 		Param: Node			
 	- exists					O(n)			Return: Boolean		Param: value
 	- get_node					O(log(n))		Return: Node 	 	Param: value, iterator
 	- get_min					O(log(n))		Return: Min value 	Param: value, get_node = False
 	- get_max					O(log(n))		Return: Max value 	Param: value, get_node = False
 	- get_successor				O(n)			Return: Successor 	Param: value, get_node = False
 	- get_predecessor			O(n)			Return: Successor 	Param: value, get_node = False
-	- fancy_print				O(n)			Return: -			Param: -	
 	- is_subtree*				O(n + m)		Return: Boolean		param: tree
 
 	* Contains inline recursive funtion
@@ -89,8 +102,8 @@ class RedBlackTree(BinarySearchTree):
 		parent = self.get_parent(node)
 
 		# Check parent is None
-		if parent is None:
-			return None
+		if parent.value is None:
+    			return None
 
 		return parent.right if (parent.left == node) else parent.left		
 
@@ -109,8 +122,8 @@ class RedBlackTree(BinarySearchTree):
 			''' Recursive function to iterate all nodes '''
 
 			# Exigt condition
-			if iterator is None:
-				return
+			if iterator.value is None:
+    				return
 
 			traverse(self, iterator.right, reversed) if (reversed == True) else traverse(self, iterator.left, reversed)
 			print(iterator.value, iterator.color[0], sep = '-', end = ' ')
@@ -131,8 +144,8 @@ class RedBlackTree(BinarySearchTree):
 			''' Recursive in order traverse '''
 
 			# Exit condition
-			if iterator is None:
-				return
+			if iterator.value is None:
+    				return
 
 			in_order_traverse_recursive(self, iterator.left, array)
 
@@ -148,7 +161,7 @@ class RedBlackTree(BinarySearchTree):
 
 			while True:
 
-				if iterator is not None:
+				if iterator.value is not None:
 					stack.append(iterator)
 					iterator = iterator.left
 
@@ -174,62 +187,6 @@ class RedBlackTree(BinarySearchTree):
 		return array
 
 
-	def rotate_left(self, node):
-		''' Rotates the given value to the left '''
-
-		iterator = self.root
-
-		# In case value does not exist
-		if node is None or node.right is None:
-			return
-
-		temp = node.right
-		node.right = temp.left
-
-		if temp.left is not None:
-			temp.left.parent = node
-
-		temp.parent = node.parent
-
-		if node.parent is None:
-			self.root = temp
-		elif node is node.parent.left:
-			node.parent.left = temp
-		else:
-			node.parent.right = temp
-
-		temp.left = node
-		node.parent = temp			
-
-
-	def rotate_right(self, node):
-		''' Rotates the given value to the right '''
-
-		iterator = self.root
-
-		# In case value does not exist
-		if node is None or node.left is None:
-			return
-
-		temp = node.left
-		node.left = temp.right
-
-		if temp.right is not None:
-			temp.right.parent = node
-
-		temp.parent = node.parent
-
-		if node.parent is None:
-			self.root = temp
-		elif node is node.parent.right:
-			node.parent.right = temp
-		else:
-			node.parent.left = temp
-
-		temp.right = node
-		node.parent = temp	
-
-
 	def pre_order_traverse(self, new_line = True, no_print = False):
 		''' Traverse the list pre order '''
 
@@ -237,7 +194,7 @@ class RedBlackTree(BinarySearchTree):
 			''' Recursive pre order traverse '''
 
 			# Exit condition
-			if iterator is None:
+			if iterator.value is None:
     				return
 
 			if no_print == False:
@@ -253,7 +210,7 @@ class RedBlackTree(BinarySearchTree):
 
 			while True:
 
-				if iterator is not None:
+				if iterator.value is not None:
 					print(iterator.value, iterator.color[0], sep = '-', end = ' ')
 					array.append(iterator.value)
 					stack.append(iterator)		
@@ -287,7 +244,7 @@ class RedBlackTree(BinarySearchTree):
 			''' Recursive post order traverse '''
 
 			# Exit condition
-			if iterator is None:
+			if iterator.value is None:
     				return
 			
 			post_order_traverse_recursive(self, iterator.left, array)
@@ -302,7 +259,7 @@ class RedBlackTree(BinarySearchTree):
 			stack = []
 			last_out = None
 
-			if iterator is None:
+			if iterator.value is None:
 				return
 
 			while True:
@@ -333,12 +290,20 @@ class RedBlackTree(BinarySearchTree):
 
 		# Returns the array if needed
 		return array
+
+
+	def recolor(self, value):
+		''' Recolors the given node '''		
+
+		iterator = self.root
+		node = self.get_node(value, iterator)
+		node.color =  'BLACK' if (node.color == 'RED') else 'RED'
 	
   
-	def fancy_print(self) : 
+	def fancy_print(self, print_NIL = False) : 
 		''' Fancy prints the tree '''
 
-		def fancy_print(self, node, space) :
+		def fancy_print(self, node, space, print_NIL) :
 			''' Recursively fancy prints the tree '''
 
 			COUNT = [10]	# Number of spaces
@@ -351,17 +316,21 @@ class RedBlackTree(BinarySearchTree):
 			space += COUNT[0]
   
 			# Process right branch first  
-			fancy_print(self, node = node.right, space = space)
+			if node.value is not None:
+				fancy_print(self, node = node.right, space = space, print_NIL = print_NIL)
   
-			# Print current node after space  
-			# count  
-			print('\n', abs(space - COUNT[0]) * ' ', str(node.value) + '-' + node.color[0], sep = '')
+			# Print current node after space 
+			if node.value is not None:
+				print('\n', abs(space - COUNT[0]) * ' ', str(node.value) + '-' + node.color[0], sep = '')
+			elif print_NIL == True:
+				print('\n', abs(space - COUNT[0]) * ' ', 'NIL-' + node.color[0], sep = '')
 	  
-			# Process left branch  
-			fancy_print(self, node.left, space)    
+			# Process left branch 
+			if node.value is not None:
+				fancy_print(self, node = node.left, space = space, print_NIL = print_NIL)    
 
 		temp = self.root
-		fancy_print(self, node = temp, space = 0)
+		fancy_print(self, node = temp, space = 0, print_NIL = print_NIL)
 		print()	
 
 
@@ -370,11 +339,11 @@ class RedBlackTree(BinarySearchTree):
 		def insert_recurse(self, iterator, node):
 			''' Recursively inserts the new node '''
 
-			if iterator is not None:
-
+			if iterator.value is not None:
+        
 				# left branch
 				if node.value < iterator.value:					
-					if iterator.left is not None:
+					if iterator.left.value is not None:
 						insert_recurse(self, iterator.left, node)		# Go deeper to the left branch
 						return
 					else:
@@ -382,14 +351,14 @@ class RedBlackTree(BinarySearchTree):
 
 				# Right branch (Can contain duplicates)
 				else:
-					if iterator.right is not None:
+					if iterator.right.value is not None:
 						insert_recurse(self, iterator.right, node)	# Go deeper to the right branch
 						return
 					else:
 						iterator.right = node
 
 			node.parent = iterator			# Set parent			
-			node.left = node.right = None	# NIL children
+			node.left = node.right = NIL()	# NIL children
 			node.color = 'RED'				# Set as 'RED', it violates rules 2 & 3, but it's easy to fix
 
 			insert_fix_case_1(self, node)
@@ -397,10 +366,10 @@ class RedBlackTree(BinarySearchTree):
 
 		def insert_fix_case_1(self, node):
 			''' In this case, the node is the root. Solution: color it BLACK '''
-
+ 
 			# 1. Recolor
-			if node.parent is None:
-				node.color = 'BLACK'
+			if node.parent.value is None:
+    				node.color = 'BLACK'
 			else:
 				insert_fix_case_1_5(self, node)
 
@@ -422,7 +391,7 @@ class RedBlackTree(BinarySearchTree):
 			uncle = self.get_uncle(node)
 
 			# 1. Recolor
-			if uncle is not None and uncle.color == 'RED':
+			if uncle.value is not None and uncle.color == 'RED':
 				self.get_parent(node).color = 'BLACK'
 				self.get_uncle(node).color = 'BLACK'
 				self.get_grand_parent(node).color = 'RED'
@@ -440,10 +409,10 @@ class RedBlackTree(BinarySearchTree):
 
 			# 1. Rotate
 			if node == parent.right and parent == grand_parent.left:
-				self.rotate_left(parent)
+				self.rotate_left(parent.value)
 				node = node.left
 			elif node == parent.left and parent == grand_parent.right:
-				self.rotate_right(parent)
+				self.rotate_right(parent.value)
 				node = node.right
 			
 			insert_fix_case_4(self, node)	# We might mess up the upper nodes, so recheck recursively
@@ -456,9 +425,9 @@ class RedBlackTree(BinarySearchTree):
 
 			# 1. Rotate
 			if node == parent.left and parent == grand_parent.left:
-				self.rotate_right(grand_parent)
+				self.rotate_right(grand_parent.value)
 			else:
-				self.rotate_left(grand_parent)
+				self.rotate_left(grand_parent.value)
 
 			# 2. Recolor
 			parent.color = 'BLACK'
@@ -471,19 +440,26 @@ class RedBlackTree(BinarySearchTree):
 		# In case the root is empty
 		if self.root is None:
 			self.root = node
+			iterator = NIL()
 
 		# Insert the node to the current tree
 		insert_recurse(self, iterator, node)
-
-		# Repair the tree in using the 3 cases if any of the rules are violated
-		# insert_fix(self, node)
-
 
 	def insert_range(self, ls):
 		''' Inserts a list of items into the tree '''
 
 		for item in ls:
-			self.Insert(item)
+			self.insert(item)
+
+
+	# def delete(self, value):
+	# 	''' Deletes the given value from the tree '''
+
+	# 	node = self.get_node(value)
+
+	# 	# Do nothing when value is not found
+	# 	if node is None:
+	# 		return;	
 
 
 # Initialization
@@ -492,10 +468,5 @@ RB = RedBlackTree()
 # Insert
 RB.insert(5)
 RB.insert(10)
-RB.insert(3)
-RB.insert(1)
-RB.insert(9)
-RB.insert(2)
-RB.insert(4)
-RB.insert(8)
-RB.fancy_print()
+RB.insert_range([3, 1, 9, 2, 4, 8])
+RB.fancy_print(print_NIL = False)
