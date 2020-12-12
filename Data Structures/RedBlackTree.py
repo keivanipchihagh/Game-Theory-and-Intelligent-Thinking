@@ -439,6 +439,64 @@ class RedBlackTree(BST):
 		return is_subarray(self, tree_1_in_order, tree_2_in_order) and is_subarray(self, tree_1_pre_order, tree_2_pre_order)
 	
   
+	def rotate_left(self, value):
+		''' Rotates the given value to the left '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)		# Get the corresponding node for the given value
+
+		# In case value does not exist
+		if node is None or node.right.value is None:
+			return
+
+		temp = node.right
+		node.right = temp.left
+
+		if temp.left.value is not None:
+			temp.left.parent = node
+
+		temp.parent = node.parent
+
+		if node.parent.value is None:
+			self.root = temp
+		elif node is node.parent.left:
+			node.parent.left = temp
+		else:
+			node.parent.right = temp
+
+		temp.left = node
+		node.parent = temp			
+
+
+	def rotate_right(self, value):
+		''' Rotates the given value to the right '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)		# Get the corresponding node for the given value
+
+		# In case value does not exist
+		if node is None or node.left.value is None:
+			return
+
+		temp = node.left
+		node.left = temp.right
+
+		if temp.right.value is not None:
+			temp.right.parent = node
+
+		temp.parent = node.parent
+
+		if node.parent.value is None:
+			self.root = temp
+		elif node is node.parent.right:
+			node.parent.right = temp
+		else:
+			node.parent.left = temp
+
+		temp.right = node
+		node.parent = temp	
+
+
 	def fancy_print(self, print_NIL = False) : 
 		''' Fancy prints the tree '''
 
@@ -470,7 +528,7 @@ class RedBlackTree(BST):
 
 		temp = self.root
 		fancy_print(self, node = temp, space = 0, print_NIL = print_NIL)
-		print()	
+		print('-' * 50)
 
 
 	def insert(self, value):
@@ -599,30 +657,46 @@ class RedBlackTree(BST):
 
 			# Save node's properties		
 			old_node = node
+			new_node = NIL(parent = node.parent)	# Set parent
 
 			if node.parent.left == node:
-				node.parent.left = NIL(parent = node.parent)
+				node.parent.left = new_node
 			else:
-				node.parent.right = NIL(parent = node.parent)
+				node.parent.right = new_node
 
 			# Rule 4 is violated when color is BLACK
 			if old_node.color == 'BLACK':
-				delete_fixup(node)
+				delete_fixup(self, new_node)
 
 		def delete_case_2(self, node, has_left_child):
 			''' Case 2 - 1 non-NIL child which is always black - Replace the target node with its only non-NIL child '''
 
 			# Save node's properties
 			old_node = node
+			new_node = None
 
 			# If node is the left child
-			if node.parent.left == node:    		
-				node.parent.left = node.left if (has_left_child) else node.right
+			if node.parent.left == node:
+
+				if has_left_child:
+					new_node = node.left
+					node.parent.right = new_node
+				else:
+					new_node = node.right
+					node.parent.left = new_node
 			else:
-				node.parent.right = node.left if (has_left_child) else node.right
+    				
+				if has_left_child:
+					new_node = node.left
+					node.parent.right = new_node
+				else:
+					new_node = node.right
+					node.parent.left = new_node					
+
+			new_node.parent = node.parent	# Set new_node's parent
 
 			if old_node.color == 'BLACK':	# There is NO way the deleted node is RED - So rule 4 is violated (Might as well rule 3)
-				delete_fixup(node)
+				delete_fixup(self, new_node)
 
 		def delete_case_3(self, node):
 			''' Case 3 - 2 non_NIL children - Copy successors value to the target node, then delete the soccessor which leads to either Case 1 or 2 '''
@@ -652,11 +726,11 @@ class RedBlackTree(BST):
 				# 1. Swap colors (node.parent, sibling)
 				parent.color, sibling.color = sibling.color, parent.color
 
-				# 2. Rotate node.parent the opposite direction of node
+				# 2. Rotate node.parent the same direction of node
 				if node == parent.left:
-					self.rotate_left(parent)
+					self.rotate_left(node.parent.value)
 				else:
-					self.rotate_right(parent)
+					self.rotate_right(node.parent.value)
 
 				# 3. Repeat the process
 				delete_fixup(self, node)
@@ -671,31 +745,34 @@ class RedBlackTree(BST):
 				node = parent
 
 				# 3. Repeat the process with the new node
-				delete_fixup(node)
+				delete_fixup(self, node)
 
 			# Case 3 - Sibling is BLACK
-			if sibling.color = 'BLACK':
+			if sibling.color == 'BLACK':
 
 				# sibling.left is RED and sibling.right is BLACK
-				if sibling.left.color == 'RED' and sibling.right.color == 'BLACK'
+				if sibling.left.color == 'RED' and sibling.right.color == 'BLACK':
 
 					# 1. Swap colors (sibling, sibling.left)
 					sibling.color, sibling.left.color = sibling.left.color, sibling.color
 
 					# 2. Rotate sibling to right
-					self.rotate_right(sibling)
+					self.rotate_right(sibling.value)
+
+					# 3. Repaet the process with the sibling
+					delete_fixup(self, sibling)
 
 				# sibling.right is RED and sibling.left is BLACK
-				else:
+				elif sibling.left.color == 'BLACK' and sibling.right.color == 'RED':
 
 					# 1. Swap colors (sibling, sibling.right)
 					sibling.color, sibling.right.color = sibling.right.color, sibling.color
 
 					# 2. Rotate sibling to right
-					self.rotate_left(sibling)
+					self.rotate_left(sibling.value)
 
-				# 3. Repaet the process with the sibling
-				delete_fixup(sibling)
+					# 3. Repaet the process with the sibling
+					delete_fixup(self, sibling)				
 
 			# Case 4 - Sibling is BLACK
 			if sibling.color == 'BLACK':
@@ -710,7 +787,7 @@ class RedBlackTree(BST):
 					sibling.right.color = 'BLACK'
 
 					# 3. Rotate parent to the left
-					self.rotate_left(parent)
+					self.rotate_left(parent.value)
 
 				# sibling.left is RED (sibling.right does not matter)
 				else:
@@ -719,7 +796,9 @@ class RedBlackTree(BST):
 					sibling.left.color = 'BLACK'
 
 					# 3. Rotate parent to the left
-					self.rotate_right(parent)
+					self.rotate_right(parent.value)
+
+				return
     			
 
 		def delete(self, node):
@@ -734,18 +813,18 @@ class RedBlackTree(BST):
 				delete_case_1(self, node)
 
 			# Case 2 - 1 non-NIL child which is always black - Replace the target node with its only non-NIL child
-			if has_right_child or has_left_child:
+			elif has_right_child or has_left_child:
 				delete_case_2(self, node, has_left_child)   			
 
 			# Case 3 - 2 non_NIL children - Copy successors value to the target node, then delete the soccessor which leads to either Case 1 or 2
-			if not has_no_child:
+			elif not has_no_child:
 				delete_case_3(self, node)
 
 		iterator = self.root
 		node = self.get_node(value, iterator)		
 
 		# Do nothing when value is not found
-		if node is None:
+		if node.value is None:
 			return;
 
 		# Delete node
@@ -755,8 +834,6 @@ class RedBlackTree(BST):
 RB = RedBlackTree()
 
 # Insert
-RB.insert(5)
-RB.insert(10)
-RB.insert_range([3, 1, 9, 2, 4, 8])
-# RB.delete(2)
+RB.insert_range([13, 8, 17, 1, 11, 15, 25, 6, 22, 27])
+RB.delete(11)
 RB.fancy_print(print_NIL = False)
