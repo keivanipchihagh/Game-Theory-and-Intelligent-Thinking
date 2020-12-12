@@ -10,11 +10,11 @@ from BinarySearchTree import BinarySearchTree as BST
 class NIL:
 	''' NILL '''
     
-	def __init__(self):
-
+	def __init__(self, parent = None, value = None):
+    
 		self.color = 'BLACK'
-		self.parent = None
-		self.value = None
+		self.parent = parent
+		self.value = value
 
 class Node:
 	''' Node object contains a value, a pointers to left and a pointer to the right node '''
@@ -56,17 +56,18 @@ class RedBlackTree(BST):
 	- fancy_print				O(n)			Return: -			Param: -		
 	- delete					O(log(n))		Return: -			Param: value
 	- recolor 					O(n)			Return: -			Param: value
+	- get_min					O(log(n))		Return: Min value 	Param: value, get_node = False
+	- get_max					O(log(n))		Return: Max value 	Param: value, get_node = False
+	- get_successor				O(n)			Return: Successor 	Param: value, get_node = False
+	- get_predecessor			O(n)			Return: Successor 	Param: value, get_node = False
+	- delete 					O(log(n))		Return: -			Raram: value
 
 	functions (Inherited from BST):
 
 	- rotate_left				O(1)			Return: -	 		Param: Node
 	- rotate_right				O(1)			Return: -	 		Param: Node			
 	- exists					O(n)			Return: Boolean		Param: value
-	- get_node					O(log(n))		Return: Node 	 	Param: value, iterator
-	- get_min					O(log(n))		Return: Min value 	Param: value, get_node = False
-	- get_max					O(log(n))		Return: Max value 	Param: value, get_node = False
-	- get_successor				O(n)			Return: Successor 	Param: value, get_node = False
-	- get_predecessor			O(n)			Return: Successor 	Param: value, get_node = False
+	- get_node					O(log(n))		Return: Node 	 	Param: value, iterator	
 	- is_subtree*				O(n + m)		Return: Boolean		param: tree
 
 	* Contains inline recursive funtion
@@ -135,6 +136,39 @@ class RedBlackTree(BST):
 		# Print new line
 		if new_line == True:
 			print()
+
+
+	def get_depth(self):
+		''' Returns the depth of the tree '''
+
+		def get_depth(self, node):
+			''' Recursivly get the depth of the tree '''
+
+			if node is None:
+				return -1
+
+			max_left = get_depth(self, node.left)
+			max_right = get_depth(self, node.right)
+
+			return max_left + 1 if (max_left > max_right) else max_right + 1
+
+		node = self.root
+		return get_depth(self, node)
+
+
+	def get_node(self, value, iterator):
+		'''  Returns the node containing the given value '''
+
+		# Exit condition
+		if iterator.value is None:
+			return iterator
+
+		if value == iterator.value:
+			return iterator
+		elif value < iterator.value:
+			return self.get_node(value, iterator.left)
+		else:
+			return self.get_node(value, iterator.right)
 
 
 	def in_order_traverse(self, new_line = True, no_print = False):
@@ -292,12 +326,117 @@ class RedBlackTree(BST):
 		return array
 
 
+	def get_min(self, value, get_node = False):
+		''' Get the minimum value from a given parent value '''
+
+		iterator = self.root
+		iterator = self.get_node(value, iterator)	# Get the corresponding node
+
+		while iterator.left.value is not None:
+			iterator = iterator.left
+
+		# Return node or its value
+		return iterator if (get_node == True) else iterator.value
+
+
+	def get_max(self, value, get_node = False):
+		''' Get the maxumum value from a given parent value '''
+
+		iterator = self.root
+		iterator = self.get_node(value, iterator)	# Get the corresponding node
+
+		while iterator.right.value is not None:
+			iterator = iterator.right
+
+		return iterator if (get_node == True) else iterator.value
+
+
+	def get_successor(self, value, get_node = False):
+		''' Get the successor for the given value '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)	# Get the corresponding node
+
+		if node.right.value is not None:
+   			return self.get_min(node.right.value, get_node)
+
+		parent = node.parent
+		while parent is not None and parent.right == node:
+			node = parent
+			parent = parent.parent	
+
+		# Return node or its value
+		return parent if (get_node == True) else parent.value
+
+
+	def get_predecessor(self, value, get_node = False):
+		''' Get the predecessor for the given value '''
+
+		iterator = self.root
+		node = self.get_node(value, iterator)	# Get the corresponding node
+
+		if node.left.value is not None:
+			return self.get_max(node.left.value, get_node)
+
+		parent = node.parent
+		while parent is not None and parent.left == node:
+			node = parent
+			parent = parent.parent	
+
+		# Return node or its value
+		return parent if (get_node == True) else parent.value
+
+
 	def recolor(self, value):
 		''' Recolors the given node '''		
 
 		iterator = self.root
 		node = self.get_node(value, iterator)
 		node.color =  'BLACK' if (node.color == 'RED') else 'RED'
+
+
+	def exists(self, value):
+		''' Check whether the given value exists in the tree or not '''
+
+		if self.size == 0: raise Exception('Tree is empty!')
+
+		iterator = self.root
+		return True if (self.get_node(value, iterator) == True) else False
+		
+
+	def is_subtree(self, tree):
+		''' Checks if the given BST tree is the subtree of the current BST tree '''
+
+		def is_subarray(self, arr_1, arr_2):
+
+			i = j = 0
+
+			while i < len(arr_1) and j < len(arr_2):
+
+				if arr_1[i] == arr_2[j]:
+					i += 1
+					j += 1
+
+					# Second tree traverse completed
+					if j == len(arr_2):
+						return True
+
+				else:
+					i = i - j + 1
+					j = 0
+
+			return False
+
+		# Get 'In Order' & 'Pre Order' of tree_1
+		tree_1_in_order = self.in_order_traverse()
+		tree_1_pre_order = self.pre_order_traverse()
+
+		# Get 'In Order' & 'Pre Order' of tree_2
+		tree_2_in_order = tree.in_order_traverse()
+		tree_2_pre_order = tree.pre_order_traverse()
+
+		# Compare arrays for each tree respectively
+		return is_subarray(self, tree_1_in_order, tree_2_in_order) and is_subarray(self, tree_1_pre_order, tree_2_pre_order)
 	
   
 	def fancy_print(self, print_NIL = False) : 
@@ -452,15 +591,84 @@ class RedBlackTree(BST):
 			self.insert(item)
 
 
-	# def delete(self, value):
-	# 	''' Deletes the given value from the tree '''
+	def delete(self, value):
+		''' Deletes the given value from the tree '''
 
-	# 	node = self.get_node(value)
+		def delete_case_1(self, node):
+			''' Case 1 - No children - Replace the target node with a NIL '''
 
-	# 	# Do nothing when value is not found
-	# 	if node is None:
-	# 		return;	
+			# Save node's properties		
+			old_node = node
 
+			if node.parent.left == node:
+				node.parent.left = NIL(parent = node.parent)
+			else:
+				node.parent.right = NIL(parent = node.parent)
+
+			# Rule 4 is violated when color is BLACK
+			if old_node.color == 'BLACK':
+				delete_fixup(node)
+
+		def delete_case_2(self, node, has_left_child):
+			''' Case 2 - 1 non-NIL child which is always black - Replace the target node with its only non-NIL child '''
+
+			# Save node's properties
+			old_node = node
+
+			# If node is the left child
+			if node.parent.left == node:    		
+				node.parent.left = node.left if (has_left_child) else node.right
+			else:
+				node.parent.right = node.left if (has_left_child) else node.right
+
+			if old_node.color == 'BLACK':	# There is NO way the deleted node is RED - So rule 4 is violated (Might as well rule 3)
+				delete_fixup(node)
+
+		def delete_case_3(self, node):
+			''' Case 3 - 2 non_NIL children - Copy successors value to the target node, then delete the soccessor which leads to either Case 1 or 2 '''
+
+			successor = self.get_successor(value = node.value, get_node = True)
+
+			# Replace node's value with it's successor's
+			node.value = successor.value
+
+			# Delete the successor
+			delete(self, successor)
+
+		def delete_fixup(self, node):
+			''' Fixes any violations in the tree '''
+    			
+
+		def delete(self, node):
+    
+			# Determine children condition
+			has_no_child = node.left.value is None and node.right.value is None
+			has_left_child = node.left.value is not None and node.right.value is None
+			has_right_child = node.left.value is None and node.right.value is not None
+
+			''' Case 1 - No children - Replace the target node with a NIL '''
+			if has_no_child:
+				delete_case_1(self, node)
+
+			''' Case 2 - 1 non-NIL child which is always black - Replace the target node with its only non-NIL child '''
+			if has_right_child or has_left_child:
+				delete_case_2(self, node, has_left_child)
+   			
+
+			''' Case 3 - 2 non_NIL children - Copy successors value to the target node, then delete the soccessor which leads to either Case 1 or 2 '''
+			if not has_no_child:
+				delete_case_3(self, node)
+
+
+		iterator = self.root
+		node = self.get_node(value, iterator)		
+
+		# Do nothing when value is not found
+		if node is None:
+			return;
+
+		# Delete node
+		delete(self, node)
 
 # Initialization
 RB = RedBlackTree()
@@ -469,4 +677,5 @@ RB = RedBlackTree()
 RB.insert(5)
 RB.insert(10)
 RB.insert_range([3, 1, 9, 2, 4, 8])
+# RB.delete(2)
 RB.fancy_print(print_NIL = False)
