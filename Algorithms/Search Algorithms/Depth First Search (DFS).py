@@ -20,7 +20,7 @@ class Graph:
 
 		self.graph[edge] = nodes
 
-	def Depth_First_Search(self, vertex, visited):
+	def depth_first_search(self, vertex, visited):
 		''' Recursive PFS algorithm '''
 
 		# Mark vertex as visited
@@ -33,27 +33,30 @@ class Graph:
 		for adjacent in self.graph[vertex]:
 
 			if adjacent not in visited:
-				self.Depth_First_Search(adjacent, visited)
+				self.depth_first_search(adjacent, visited)
 
 
-	def DFS(self, vertex):
-		''' Depth First Search Algortihm - Time complexity: O(V + E) where V is the number of vertices and E is the number of edges in the graph '''
+	def DFS_connected_graph(self, vertex):
+		''' Depth First Search Algortihm for a connected graph - Time complexity: O(V + E) where V is the number of vertices and E is the number of edges in the graph '''
 
 		# Create a list to store visited status (Add one extra False for the vertex itself)
 		visited = set()
 
-		self.Depth_First_Search(vertex, visited)
+		self.depth_first_search(vertex, visited)
 		print()
 
-	def DFS_all(self):
-		''' Depth First Search Algortihm - Time complexity: O(V + E) where V is the number of vertices and E is the number of edges in the graph '''
+	def DFS_disconnected_graph(self, vertex):
+		''' Depth First Search Algortihm for a disconnected graph - Time complexity: O(V + E) where V is the number of vertices and E is the number of edges in the graph '''
 
 		# Create a list to store visited status (Add one extra False for the vertex itself)
 		visited = set()
+
+		# First run the DSF for the vertex to traverse the connected vertesis
+		self.depth_first_search(vertex, visited)
 
 		for vertex in self.graph.keys():
 			if vertex not in visited:
-				self.Depth_First_Search(vertex, visited)
+				self.depth_first_search(vertex, visited)
 
 		print()
 
@@ -65,6 +68,6 @@ graph.add_edge(0, [1, 2])
 graph.add_edge(1, [2])
 graph.add_edge(2, [0, 3])
 graph.add_edge(3, [3])
-graph.add_edge(4, [])
-# graph.DFS(2)
-graph.DFS_all()
+graph.add_edge(4, [])	# Disconnected vertex
+# graph.DFS_connected_graph(2)
+graph.DFS_disconnected_graph(2)
