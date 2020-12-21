@@ -4,7 +4,7 @@ Created by: 		Keivan Ipchi Hagh
 Creation data:		Monday, November 2, 2020
 GitHub:				https://github.com/keivanipchihagh
 
-Purpose of this data structure is to have the minimum possible time complexity for each operation.
+Purpose of this algorithm is to have the minimum possible time complexity
 Modify the code for your own use.
 '''
 
