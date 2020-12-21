@@ -1,5 +1,5 @@
 '''
-Implementation of Dooubly linked list
+Implementation of Depth First Search
 Created by: 		Keivan Ipchi Hagh
 Creation data:		Monday, November 2, 2020
 GitHub:				https://github.com/keivanipchihagh
