@@ -4,32 +4,24 @@ import math
 # Board
 board = [
     ['X', 'O', 'X'],
-    ['O', 'O', 'X'],
+    ['O', 'O', ' '],
     [' ', ' ', ' '],
 ]
 
-PLAYER = 'X'
-OPPONENT = 'O'
+AI = 'X'
+HUMAN = 'O'
 EMPTY = ' '
-PLAYER_SCORE = 10
-OPPONENT_SCORE = -10
+AI_SCORE = 10
+HUMAN_SCORE = -10
 
-# Checks if moves are avalible
-def is_move_left(board):
-    for i in range(len(board)):
-        for j in range(len(board[i])):
-            if board[i][j] == EMPTY:
-                return True
-    return False    
-
-# Checks game status. Returns 'X' if player wins & 'O' if the opponent wins
+# Checks game status. Returns 'X' if AI wins & 'O' if the HUMAN wins
 def evaluate(board):
     # Check rows
     for i in range(len(board)):
-        if board[i].count(PLAYER) == 3:
-            return PLAYER_SCORE
-        elif board[i].count(OPPONENT) == 3:
-            return OPPONENT_SCORE
+        if board[i].count(AI) == 3:
+            return AI_SCORE
+        elif board[i].count(HUMAN) == 3:
+            return HUMAN_SCORE
 
     # Check columns
     for i in range(len(board)):
@@ -37,10 +29,10 @@ def evaluate(board):
         for j in range(len(board[i])):
             tmp.append(board[j][i])
 
-        if tmp.count(PLAYER) == 3:
-            return PLAYER_SCORE
-        elif board[i].count(OPPONENT) == 3:
-            return OPPONENT_SCORE
+        if tmp.count(AI) == 3:
+            return AI_SCORE
+        elif board[i].count(HUMAN) == 3:
+            return HUMAN_SCORE
     
     # Check diagonals
     tmp1 = []
@@ -49,20 +41,21 @@ def evaluate(board):
         tmp1.append(board[i][i])
         tmp2.append(board[i][len(board) - i - 1])
     
-    if tmp1.count(PLAYER) == 3 or tmp2.count(PLAYER) == 3:
-        return PLAYER_SCORE
-    elif tmp1.count(OPPONENT) == 3 or tmp2.count(OPPONENT) == 3:
-        return OPPONENT_SCORE
+    if tmp1.count(AI) == 3 or tmp2.count(AI) == 3:
+        return AI_SCORE
+    elif tmp1.count(HUMAN) == 3 or tmp2.count(HUMAN) == 3:
+        return HUMAN_SCORE
 
     return None
+
 
 def minimax(board, depth, isMax):
     evaluation = evaluate(board = board)
 
-    if evaluation == PLAYER:
-        return PLAYER_SCORE
-    elif evaluation == OPPONENT:
-        return OPPONENT_SCORE
+    if evaluation == AI:
+        return AI_SCORE
+    elif evaluation == HUMAN:
+        return HUMAN_SCORE
     elif evaluation == None:
         return 0
 
@@ -72,7 +65,7 @@ def minimax(board, depth, isMax):
         for i in range(len(board)):
             for j in range(len(board[i])):
                 if board[i][j] == EMPTY:
-                    board[i][j] = PLAYER
+                    board[i][j] = AI
 
                     best = minimax(board = board, depth = depth + 1, isMax = not isMax)
                     board[i][j] = EMPTY
@@ -83,7 +76,7 @@ def minimax(board, depth, isMax):
         for i in range(len(board)):
             for j in range(len(board[i])):
                 if board[i][j] == EMPTY:
-                    board[i][j] = OPPONENT
+                    board[i][j] = HUMAN
 
                     best = minimax(board = board, depth = depth + 1, isMax = not isMax)
                     board[i][j] = EMPTY
@@ -98,7 +91,7 @@ def get_best_move(board):
     for i in range(len(board)):
             for j in range(len(board[i])):
                 if board[i][j] == EMPTY:
-                    board[i][j] = PLAYER
+                    board[i][j] = AI
 
                     value = minimax(board = board, depth = 0, isMax = False)
                     board[i][j] = EMPTY
@@ -109,18 +102,6 @@ def get_best_move(board):
 
     print('Best move value:', best)
     return move
-
-# Print
-def print_board(board):
-    for i in range(len(board)):
-        for j in range(len(board[i])):
-            print(board[i][j], end = '')
-
-            if j < len(board[i]) - 1:
-                print(' | ', end = '')
-
-        if i < len(board) - 1:
-            print('\n', '─' * 2, ' ', '─' * 3, ' ', '─' * 2, sep = '')
 
 # Main
 move = get_best_move(board = board)
