@@ -64,10 +64,9 @@ class Graph:
 
 
 graph = Graph()
-graph.add_edge(0, [1, 2])
-graph.add_edge(1, [2])
-graph.add_edge(2, [0, 3])
-graph.add_edge(3, [3])
-graph.add_edge(4, [])	# Disconnected vertex
-# graph.DFS_connected_graph(2)
-graph.DFS_disconnected_graph(2)
+graph.add_edge(1, [2, 3])
+graph.add_edge(2, [4, 5, 7])
+graph.add_edge(3, [6])
+graph.add_edge(5, [8])
+# graph.DFS_connected_graph(1)
+graph.DFS_disconnected_graph(1)
