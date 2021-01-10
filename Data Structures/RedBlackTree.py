@@ -705,7 +705,7 @@ class RedBlackTree(BST):
 
 
 		def delete_case_3(self, node):
-			''' Case 3 - 2 non_NIL children - Copy successors value to the target node, then delete the soccessor which leads to either Case 1 or 2 '''
+			''' Case 3 - 2 non_NIL children - Copy successors value to the target node, then delete the successor which leads to either Case 1 or 2 '''
 
 			successor = self.get_successor(value = node.value, get_node = True)
 
