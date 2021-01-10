@@ -5,7 +5,7 @@ Creation data:		Monday, November 8, 2020
 GitHub:				https://github.com/keivanipchihagh/Game-Theory-and-Intelligent-Thinking/blob/main/Data%20Structures/OrderStaticTree.py
 '''
 
-from RedBlackTree import RedBlackTree as RBTree
+from RedBlackTree import RedBlackTree as RBTree, NIL
 
 class Node:
 	''' Node object contains a value, a pointers to left and a pointer to the right node '''
